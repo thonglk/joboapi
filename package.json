@@ -2,7 +2,8 @@
   "name": "express-parameters",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "~1.9.2",
     "express": "~4.10.2",
-    "body-parser": "~1.9.2"
+    "firebase-admin": "^4.1.1"
   }
 }
