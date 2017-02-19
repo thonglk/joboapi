@@ -12,10 +12,12 @@ admin.initializeApp({
 var dataConfig = {};
 
 var db = admin.database();
-var ref = db.ref("user/jobber");
+var ref = db.ref("user");
 ref.on("value", function (snapshot) {
     console.log(snapshot.val());
     dataConfig = snapshot.val();
+    dataJobseeker = dataConfig.jobber;
+    dataEmployer = dataConfig.employer
 });
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -58,8 +60,8 @@ app.get('/api/users', function (req, res) {
     var onlydistance = req.param('onlydistance')
 
     var usercard = [];
-    for (var i in dataConfig){
-        var card = dataConfig[i]
+    for (var i in dataJobseeker){
+        var card = dataJobseeker[i]
         if (card.location && card.location.location) {
             var yourlat = card.location.location.lat;
             var yourlng = card.location.location.lng;
@@ -86,8 +88,10 @@ app.get('/api/users', function (req, res) {
 });
 
 // http://localhost:8080/api/1
-app.get('/api/:version', function (req, res) {
-    res.send(req.params.version);
+app.get('/api/chat', function (req, res) {
+
+
+    res.send("hihi");
 });
 
 // parameter middleware that will run before the next routes
