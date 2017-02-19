@@ -10,15 +10,23 @@ admin.initializeApp({
     databaseURL: "https://jobo-b8204.firebaseio.com"
 });
 var dataConfig = {};
-
+var dataUser = {};
 var db = admin.database();
-var ref = db.ref("user");
+var ref = db.ref();
 ref.on("value", function (snapshot) {
-    console.log(snapshot.val());
     dataConfig = snapshot.val();
-    dataJobseeker = dataConfig.jobber;
-    dataEmployer = dataConfig.employer
+    dataJobseeker = dataConfig.user.jobber;
+    dataEmployer = dataConfig.user.employer
+    dataUser = Object.assign(dataJobseeker, dataEmployer);
+    dataStore = dataConfig.store;
+    console.log('done')
+
 });
+
+function checkUserRole(id) {
+    var userRole = dataUser[id].type;
+    return userRole
+}
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
@@ -60,7 +68,7 @@ app.get('/api/users', function (req, res) {
     var onlydistance = req.param('onlydistance')
 
     var usercard = [];
-    for (var i in dataJobseeker){
+    for (var i in dataJobseeker) {
         var card = dataJobseeker[i]
         if (card.location && card.location.location) {
             var yourlat = card.location.location.lat;
@@ -87,11 +95,39 @@ app.get('/api/users', function (req, res) {
 
 });
 
+
+// http://localhost:8080/api/1
+app.get('/api/check', function (req, res) {
+    var userid = req.param('id');
+    var roleId = checkUserRole(userid);
+    res.send(roleId);
+});
+
 // http://localhost:8080/api/1
 app.get('/api/chat', function (req, res) {
     var userid = req.param('id');
+    var roleId = checkUserRole(userid);
 
-    res.send("hihi " + userid);
+    res.send("hihi " + roleId);
+
+});
+app.get('/api/storelist', function (req, res) {
+    var userid = req.param('id');
+    var userData = dataEmployer[userid];
+    var storeIdList = userData.storelist;
+    var storeList = [];
+    for (var key in storeIdList) {
+        var store = dataStore[key]
+        var storeCore = {
+            storeName: store.storeName,
+            address: store.address,
+            image: store.image,
+            storeId: store.storeId
+        };
+        storeList.push(storeCore)
+    }
+    res.send(storeList);
+
 });
 
 // parameter middleware that will run before the next routes
@@ -127,10 +163,11 @@ app.post('/api/users', function (req, res) {
 
     res.send(user_id + ' ' + token + ' ' + geo);
 });
+
 app.get('/', function (req, res) {
 
 
-    res.send('Admin Homepage' + dataConfig);
+    res.send('Admin Homepage');
 });
 
 // start the server
