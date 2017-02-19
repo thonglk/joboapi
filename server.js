@@ -99,7 +99,7 @@ app.get('/api/users', function (req, res) {
 app.get('/api/chat', function (req, res) {
     var userid = req.param('id');
     var role = checkUserRole(userid);
-    res.send("role");
+    res.send("role", role);
 });
 
 // parameter middleware that will run before the next routes
