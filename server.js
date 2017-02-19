@@ -9,7 +9,7 @@ admin.initializeApp({
     credential: admin.credential.cert("adminsdk.json"),
     databaseURL: "https://jobo-b8204.firebaseio.com"
 });
-var dataConfig = {};
+var dataConfig,dataJobseeker,dataEmployer,dataUser
 
 var db = admin.database();
 var ref = db.ref();
