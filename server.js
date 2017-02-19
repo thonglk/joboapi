@@ -12,13 +12,21 @@ admin.initializeApp({
 var dataConfig = {};
 
 var db = admin.database();
-var ref = db.ref("user");
+var ref = db.ref();
 ref.on("value", function (snapshot) {
     console.log(snapshot.val());
     dataConfig = snapshot.val();
-    dataJobseeker = dataConfig.jobber;
-    dataEmployer = dataConfig.employer
+    dataJobseeker = dataConfig.user.jobber;
+    dataEmployer = dataConfig.user.employer
+    dataUser = Object.assign(dataJobseeker, dataEmployer);
+
 });
+
+function checkUserRole(id) {
+    var roleId = dataUser[id].role;
+    return roleId
+
+}
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
@@ -89,9 +97,9 @@ app.get('/api/users', function (req, res) {
 
 // http://localhost:8080/api/1
 app.get('/api/chat', function (req, res) {
-
-
-    res.send("hihi");
+    var userid = req.param('id');
+    var role = checkUserRole(userid);
+    res.send("role");
 });
 
 // parameter middleware that will run before the next routes
