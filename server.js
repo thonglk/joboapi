@@ -9,24 +9,16 @@ admin.initializeApp({
     credential: admin.credential.cert("adminsdk.json"),
     databaseURL: "https://jobo-b8204.firebaseio.com"
 });
-var dataConfig,dataJobseeker,dataEmployer,dataUser
+var dataConfig = {};
 
 var db = admin.database();
-var ref = db.ref();
+var ref = db.ref("user");
 ref.on("value", function (snapshot) {
     console.log(snapshot.val());
     dataConfig = snapshot.val();
-    dataJobseeker = dataConfig.user.jobber;
-    dataEmployer = dataConfig.user.employer
-    dataUser = Object.assign(dataJobseeker, dataEmployer);
-
+    dataJobseeker = dataConfig.jobber;
+    dataEmployer = dataConfig.employer
 });
-
-function checkUserRole(id) {
-    var roleId = dataUser[id].role;
-    return roleId
-
-}
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
@@ -98,8 +90,8 @@ app.get('/api/users', function (req, res) {
 // http://localhost:8080/api/1
 app.get('/api/chat', function (req, res) {
     var userid = req.param('id');
-    var role = checkUserRole(userid);
-    res.send("role", role);
+
+    res.send("hihi " + userid);
 });
 
 // parameter middleware that will run before the next routes
