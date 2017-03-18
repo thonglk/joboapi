@@ -1,5 +1,5 @@
 {
-  "name": "express-parameters",
+  "name": "JoboServer",
   "main": "server.js",
   "dependencies": {
     "async": "latest",

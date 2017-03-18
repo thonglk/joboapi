@@ -65,7 +65,12 @@ function init() {
         if (!firstListen) {
             startListeners();
             firstListen = true
-
+            for (var i in dataProfile){
+                var card = dataProfile[i]
+                card.userid = i
+                var Eref = db.ref('profile/'+ i)
+                Eref.update(card)
+            }
         }
     })
 
